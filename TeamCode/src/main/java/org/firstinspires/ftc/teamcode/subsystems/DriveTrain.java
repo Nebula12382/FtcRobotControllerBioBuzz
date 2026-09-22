@@ -84,7 +84,7 @@ public class DriveTrain{
         telemetry.addData("Front Left Power", frontLeft.getPower());
         telemetry.addData("Front Right Power", frontRight.getPower());
         telemetry.addData("Back Left Power", backLeft.getPower());
-        telemetry.addData("Back Right Method", backRight.getPower());
+        telemetry.addData("Back Right Power", backRight.getPower());
 
     }
 }
