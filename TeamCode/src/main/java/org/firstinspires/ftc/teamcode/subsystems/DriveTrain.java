@@ -12,8 +12,7 @@ public class DriveTrain{
     //inits the DCmotor variables for later use
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
-    //telemetry variable for displaying motor power
-    private Telemetry telemetry;
+    private static final double NOMINAL_VOLTAGE = 12.0;
 
 
     //Maps the DC motors from the driverstation and the control hub
@@ -56,30 +55,28 @@ public class DriveTrain{
     //Used for teleop to make sure the driver can trottle it's own power
     public void MecanumDrive(double drive, double strafe, double rotation, double speed){
 
-        frontLeft.setPower((drive + strafe + rotation)*speed);
-        frontRight.setPower((drive - strafe + rotation)*speed);
-        backLeft.setPower((drive - strafe - rotation)*speed);
-        backRight.setPower((drive + strafe - rotation)*speed);
+        //scales all powers down together so none go past 1, which the SDK would clip and throw off the turning
+        double max = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(rotation), 1);
+
+        frontLeft.setPower((drive + strafe + rotation) / max * speed);
+        frontRight.setPower((drive - strafe + rotation) / max * speed);
+        backLeft.setPower((drive - strafe - rotation) / max * speed);
+        backRight.setPower((drive + strafe - rotation) / max * speed);
 
     }
 
 
     //Function for auton when voltage is key
+    //volt is the battery voltage from GetVolt(); a lower battery gets slightly more power so the robot moves the same
     public void MecanumDriveVoltage(double drive, double strafe, double rotation, double speed, double volt){
 
-        frontLeft.setPower((drive + strafe + rotation)*speed*volt);
-
-        frontRight.setPower((drive - strafe + rotation)*speed*volt);
-
-        backLeft.setPower((drive - strafe - rotation)*speed*volt);
-
-        backRight.setPower((drive + strafe - rotation)*speed*volt);
+        MecanumDrive(drive, strafe, rotation, speed * NOMINAL_VOLTAGE / volt);
 
     }
 
 
     //displays the telemetry data for teleop when testing
-    public void Telemetry(){
+    public void Telemetry(Telemetry telemetry){
 
         telemetry.addData("Front Left Power", frontLeft.getPower());
         telemetry.addData("Front Right Power", frontRight.getPower());

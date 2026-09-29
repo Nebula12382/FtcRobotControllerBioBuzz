@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
     private DcMotor intake;
-    private Telemetry telemetry;
 
     private static final double intake_power = 1.0;
     private static final double outtake_power = -1.0;
@@ -37,7 +36,7 @@ public class Intake {
         return (intake.getPower());
     }
 
-    public void update_telemetry(){
+    public void update_telemetry(Telemetry telemetry){
         if (get_power() == intake_power){
             telemetry.addLine("Intake motor current state: Intaking");
         }
