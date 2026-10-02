@@ -1,53 +1,55 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
-    private DcMotor intake;
+    private DcMotorEx intake;
 
-    private static final double intake_power = 1.0;
-    private static final double outtake_power = -1.0;
+    //900 RPM on the 1000 RPM motor: 28 ticks per motor turn x 6:1 gearbox = 168 ticks per output turn
+    private static final double TARGET_VELOCITY = 900 * 168 / 60.0;
+
+    //the speed the intake was last told to run at, used for telemetry
+    private double targetVelocity = 0;
 
 
 
     public void HardwareMapSubsystem(HardwareMap hardwareMap){
-        intake = hardwareMap.get(DcMotor.class,"intake");
+        intake = hardwareMap.get(DcMotorEx.class,"intake");
         intake.setDirection(DcMotor.Direction.FORWARD);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void in(){
-        intake.setPower(intake_power);
+        targetVelocity = TARGET_VELOCITY;
+        intake.setVelocity(targetVelocity);
     }
 
     public void out(){
-        intake.setPower(outtake_power);
+        targetVelocity = -TARGET_VELOCITY;
+        intake.setVelocity(targetVelocity);
     }
 
     public void stop(){
+        targetVelocity = 0;
         intake.setPower(0);
     }
 
-    public double get_power(){
-        return (intake.getPower());
-    }
-
     public void update_telemetry(Telemetry telemetry){
-        if (get_power() == intake_power){
+        if (targetVelocity > 0){
             telemetry.addLine("Intake motor current state: Intaking");
         }
-        else if(get_power() == outtake_power){
+        else if(targetVelocity < 0){
             telemetry.addLine("Intake motor current state: Outtaking");
         }
-        else if(get_power() == 0){
+        else {
             telemetry.addLine("Intake motor current state: 0");
         }
-        else {
-            telemetry.addLine("Null");
-        }
+        telemetry.addData("Intake speed (ticks/s)", intake.getVelocity());
     }
 }
