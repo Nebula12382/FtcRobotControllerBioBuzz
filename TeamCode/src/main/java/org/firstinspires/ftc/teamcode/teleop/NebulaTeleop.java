@@ -19,36 +19,36 @@ public class NebulaTeleop extends LinearOpMode{
     private boolean lastA = false;
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
         driveTrain.HardwareMapSubsystem(hardwareMap);
         outTake.HardwareMapSubsystem(hardwareMap);
         intake.HardwareMapSubsystem(hardwareMap);
 
         waitForStart();
-        while (opModeIsActive()){
-            double drive = gamepad1.left_stick_x;
-            double strafe = -gamepad1.left_stick_y;
+        while (opModeIsActive()) {
+            double drive = gamepad1.left_stick_y;
+            double strafe = gamepad1.left_stick_x;
             double rotation = gamepad1.right_stick_x;
 
 
             //right trigger for intake
-            if (gamepad1.right_trigger > 0.1){
+            if (gamepad1.right_trigger > 0.1) {
                 intake.in();
             }
             //ELSE left trigger for getting jammed stuff out
-            else if (gamepad1.left_trigger > 0.1){
+            else if (gamepad1.left_trigger > 0.1) {
                 intake.out();
             }
             //LASTLY voids the motor if no trigger is pressed
-            else{
+            else {
                 intake.stop();
             }
 
-            if (gamepad1.a && !lastA) {
+            if (gamepad1.a && !lastA)
                 outtakeOn = !outtakeOn;
-            }
-            lastA = gamepad1.a;
 
+            lastA = gamepad1.a;
+//
             if (outtakeOn) {
                 outTake.turn_motor();
             } else {
@@ -57,11 +57,10 @@ public class NebulaTeleop extends LinearOpMode{
 
 
             //calls the Mecanum Drive method every time it looks
-            driveTrain.MecanumDrive(drive,strafe,rotation, gamepad1.left_stick_button ? 0.15 : 1);
-
+            driveTrain.MecanumDrive(drive, strafe, rotation, gamepad1.left_stick_button ? 0.15 : 1);
             //updates telemetry lines
-            intake.update_telemetry(telemetry);
-            outTake.update_telemetry(telemetry);
+//            intake.update_telemetry(telemetry);
+//            outTake.update_telemetry(telemetry);
             driveTrain.Telemetry(telemetry);
 
             //flushes the telemetry lines to update it
@@ -69,3 +68,4 @@ public class NebulaTeleop extends LinearOpMode{
         }
     }
 }
+

@@ -19,10 +19,10 @@ public class Intake {
 
 
     public void HardwareMapSubsystem(HardwareMap hardwareMap){
-        intake = hardwareMap.get(DcMotorEx.class,"intake");
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+          intake = hardwareMap.get(DcMotorEx.class,"intake");
+          intake.setDirection(DcMotor.Direction.FORWARD);
+          intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+          intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void in(){

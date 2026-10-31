@@ -15,25 +15,25 @@ public class Outtake {
     private static final double TARGET_VELOCITY = 4000 * 28 / 60.0;
 
     public void HardwareMapSubsystem(HardwareMap hardwareMap){
-        flywheelNectar = hardwareMap.get(DcMotorEx.class,"flywheelNectar");
+        //flywheelNectar = hardwareMap.get(DcMotorEx.class,"flywheelNectar");
         flywheelPollen = hardwareMap.get(DcMotorEx.class,"flywheelPollen");
-        flywheelNectar.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //flywheelNectar.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         flywheelPollen.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void turn_motor(){
         flywheelPollen.setVelocity(TARGET_VELOCITY);
-        flywheelNectar.setVelocity(TARGET_VELOCITY);
+        //flywheelNectar.setVelocity(TARGET_VELOCITY);
     }
 
     public void stop(){
-        flywheelNectar.setPower(0);
+        //flywheelNectar.setPower(0);
         flywheelPollen.setPower(0);
     }
 
     public void update_telemetry(Telemetry telemetry){
         telemetry.addData("Outtake target (ticks/s)", TARGET_VELOCITY);
-        telemetry.addData("Outtake Nectar (ticks/s)", flywheelNectar.getVelocity());
+        //telemetry.addData("Outtake Nectar (ticks/s)", flywheelNectar.getVelocity());
         telemetry.addData("Outtake Pollen (ticks/s)", flywheelPollen.getVelocity());
     }
 }
