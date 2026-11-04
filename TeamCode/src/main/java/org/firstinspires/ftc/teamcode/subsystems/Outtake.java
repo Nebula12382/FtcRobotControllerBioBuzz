@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Outtake {
     //We need two motors for outtake
     private DcMotorEx flywheelPollen,flywheelNectar;
+    private CRServo pollenServo;
 
     //encoder ticks per second at full speed for a 6000 RPM motor (goBILDA Yellow Jacket / REV HD Hex)
     private static final double MAX_VELOCITY = 2800;
@@ -17,6 +19,7 @@ public class Outtake {
     public void HardwareMapSubsystem(HardwareMap hardwareMap){
         //flywheelNectar = hardwareMap.get(DcMotorEx.class,"flywheelNectar");
         flywheelPollen = hardwareMap.get(DcMotorEx.class,"flywheelPollen");
+        pollenServo = hardwareMap.get(CRServo.class,"pollenServo");
         //flywheelNectar.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         flywheelPollen.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
@@ -35,5 +38,12 @@ public class Outtake {
         telemetry.addData("Outtake target (ticks/s)", TARGET_VELOCITY);
         //telemetry.addData("Outtake Nectar (ticks/s)", flywheelNectar.getVelocity());
         telemetry.addData("Outtake Pollen (ticks/s)", flywheelPollen.getVelocity());
+    }
+    public void turnServo(){
+        pollenServo.setPower(1.0);
+    }
+
+    public void offServo(){
+        pollenServo.setPower(0.0);
     }
 }

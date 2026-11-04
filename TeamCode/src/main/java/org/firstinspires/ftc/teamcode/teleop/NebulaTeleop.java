@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name = "Nebula Teleop", group = "TeleOp")
@@ -14,10 +15,11 @@ public class NebulaTeleop extends LinearOpMode{
     private final DriveTrain driveTrain = new DriveTrain();
     private final Outtake outTake = new Outtake();
     private final Intake intake = new Intake();
+    private final ElapsedTime timer = new ElapsedTime();
 
     private boolean outtakeOn = false;
     private boolean lastA = false;
-
+    private boolean running = false;
     @Override
     public void runOpMode() throws InterruptedException {
         driveTrain.HardwareMapSubsystem(hardwareMap);
@@ -55,6 +57,16 @@ public class NebulaTeleop extends LinearOpMode{
                 outTake.stop();
             }
 
+            if (gamepad1.right_bumper && !running){
+                outTake.turnServo();
+                timer.reset();
+                running = true;
+            }
+
+            if (running && timer.seconds() >= 0.5){
+                outTake.offServo();
+                running = false;
+            }
 
             //calls the Mecanum Drive method every time it looks
             driveTrain.MecanumDrive(drive, strafe, rotation, gamepad1.left_stick_button ? 0.15 : 1);
