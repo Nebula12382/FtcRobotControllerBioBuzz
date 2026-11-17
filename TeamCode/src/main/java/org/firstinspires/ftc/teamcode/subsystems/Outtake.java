@@ -40,7 +40,7 @@ public class Outtake {
         telemetry.addData("Outtake Pollen (ticks/s)", flywheelPollen.getVelocity());
     }
     public void turnServo(){
-        pollenServo.setPower(1.0);
+        pollenServo.setPower(-1.0);
     }
 
     public void offServo(){
