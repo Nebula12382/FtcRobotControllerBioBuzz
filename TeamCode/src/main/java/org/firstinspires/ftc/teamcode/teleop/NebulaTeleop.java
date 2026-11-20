@@ -71,8 +71,8 @@ public class NebulaTeleop extends LinearOpMode{
                 running = true;
             }
 
-            if (running && timer.seconds() >= 0.5){
-                outTake.offServo();
+            if (running && timer.seconds() >= 2.0){
+                outTake.offServo(); // <-- Add this so it stops spinning!
                 running = false;
             }
 

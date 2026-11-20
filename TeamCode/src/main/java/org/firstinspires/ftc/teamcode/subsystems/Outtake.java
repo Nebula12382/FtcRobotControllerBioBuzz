@@ -68,7 +68,7 @@ public class Outtake {
         telemetry.addData("Outtake ready", isReady());
     }
     public void turnServo(){
-        pollenServo.setPower(1.0);
+        pollenServo.setPower(-1.0);
     }
 
     public void offServo(){
