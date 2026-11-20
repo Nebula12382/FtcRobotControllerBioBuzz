@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
@@ -16,10 +15,12 @@ public class NebulaTeleop extends LinearOpMode{
     private final Outtake outTake = new Outtake();
     private final Intake intake = new Intake();
     private final ElapsedTime timer = new ElapsedTime();
+    private final ElapsedTime voltTimer = new ElapsedTime();
 
     private boolean outtakeOn = false;
     private boolean lastA = false;
     private boolean running = false;
+    private double volt = 12.0;
     @Override
     public void runOpMode() throws InterruptedException {
         driveTrain.HardwareMapSubsystem(hardwareMap);
@@ -32,6 +33,11 @@ public class NebulaTeleop extends LinearOpMode{
             double strafe = gamepad1.left_stick_x;
             double rotation = gamepad1.right_stick_x;
 
+            //checks battery every 0.25 sec
+            if (voltTimer.seconds() >= 0.25){
+                volt = driveTrain.GetVolt(hardwareMap);
+                voltTimer.reset();
+            }
 
             //right trigger for intake
             if (gamepad1.right_trigger > 0.1) {
@@ -46,18 +52,20 @@ public class NebulaTeleop extends LinearOpMode{
                 intake.stop();
             }
 
+            //A toggles flywheel
             if (gamepad1.a && !lastA)
                 outtakeOn = !outtakeOn;
 
             lastA = gamepad1.a;
-//
+
             if (outtakeOn) {
-                outTake.turn_motor();
+                outTake.turn_motor(volt);
             } else {
                 outTake.stop();
             }
 
-            if (gamepad1.right_bumper && !running){
+            //right bumper shoots, only when flywheel is up to speed
+            if (gamepad1.right_bumper && !running && outtakeOn && outTake.isReady()){
                 outTake.turnServo();
                 timer.reset();
                 running = true;
@@ -68,16 +76,16 @@ public class NebulaTeleop extends LinearOpMode{
                 running = false;
             }
 
-            //calls the Mecanum Drive method every time it looks
-            driveTrain.MecanumDrive(drive, strafe, rotation, gamepad1.left_stick_button ? 0.15 : 1);
+            //calls the Mecanum Drive method every time it looks, left stick click is slow mode
+            driveTrain.MecanumDriveVoltage(drive, strafe, rotation, gamepad1.left_stick_button ? 0.15 : 1, volt);
             //updates telemetry lines
 //            intake.update_telemetry(telemetry);
-//            outTake.update_telemetry(telemetry);
+            outTake.update_telemetry(telemetry);
             driveTrain.Telemetry(telemetry);
+            telemetry.addData("Battery (V)", volt);
 
             //flushes the telemetry lines to update it
             telemetry.update();
         }
     }
 }
-

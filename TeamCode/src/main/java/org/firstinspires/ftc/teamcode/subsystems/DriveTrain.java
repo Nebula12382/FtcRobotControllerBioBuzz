@@ -68,9 +68,10 @@ public class DriveTrain{
 
     //Function for auton when voltage is key
     //volt is the battery voltage from GetVolt(); a lower battery gets slightly more power so the robot moves the same
+    //capped at 1 so turning doesnt get messed up
     public void MecanumDriveVoltage(double drive, double strafe, double rotation, double speed, double volt){
 
-        MecanumDrive(drive, strafe, rotation, speed * NOMINAL_VOLTAGE / volt);
+        MecanumDrive(drive, strafe, rotation, Math.min(speed * NOMINAL_VOLTAGE / volt, 1));
 
     }
 
