@@ -40,9 +40,26 @@ repositories {
     maven {
         url = "https://repo.dairy.foundation/releases"
     }
+    // Road Runner repository
+    maven {
+        url = "https://maven.brott.dev/"
+    }
 }
 dependencies {
     implementation project(':FtcRobotController')
     implementation("dev.frozenmilk.sinister:Sloth:0.3.2")
 
+    // dashboard that works w sloth, use this instead of the normal ftc dashboard
+    implementation("com.acmerobotics.slothboard:dashboard:0.3.2+0.6.0")
+
+    // road runner, excludes the normal dashboard so it doesnt clash w slothboard
+    implementation("com.acmerobotics.roadrunner:ftc:0.1.25") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    implementation("com.acmerobotics.roadrunner:core:1.0.1") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    implementation("com.acmerobotics.roadrunner:actions:1.0.1") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
 }
