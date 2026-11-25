@@ -28,6 +28,13 @@ public class Outtake {
 
     private double power = 0;
 
+    //multiplies the target speed, outreach teleop sets this to 1/3
+    public double speedScale = 1.0;
+
+    private double target(){
+        return TARGET_VELOCITY * speedScale;
+    }
+
     public void HardwareMapSubsystem(HardwareMap hardwareMap){
         //flywheelNectar = hardwareMap.get(DcMotorEx.class,"flywheelNectar");
         flywheelPollen = hardwareMap.get(DcMotorEx.class,"flywheelPollen");
@@ -42,8 +49,8 @@ public class Outtake {
 
     //call every loop, low battery gets more power so speed stays the same
     public void turn_motor(double volt){
-        double error = TARGET_VELOCITY - flywheelPollen.getVelocity();
-        power = (kV * TARGET_VELOCITY) * (NOMINAL_VOLTAGE / volt) + kP * error;
+        double error = target() - flywheelPollen.getVelocity();
+        power = (kV * target()) * (NOMINAL_VOLTAGE / volt) + kP * error;
         power = Math.max(0, Math.min(power, 1));
         flywheelPollen.setPower(power);
         //flywheelNectar.setPower(power);
@@ -57,11 +64,11 @@ public class Outtake {
 
     //true when flywheel is up to speed
     public boolean isReady(){
-        return Math.abs(TARGET_VELOCITY - flywheelPollen.getVelocity()) < READY_TOLERANCE;
+        return Math.abs(target() - flywheelPollen.getVelocity()) < READY_TOLERANCE;
     }
 
     public void update_telemetry(Telemetry telemetry){
-        telemetry.addData("Outtake target (ticks/s)", TARGET_VELOCITY);
+        telemetry.addData("Outtake target (ticks/s)", target());
         //telemetry.addData("Outtake Nectar (ticks/s)", flywheelNectar.getVelocity());
         telemetry.addData("Outtake Pollen (ticks/s)", flywheelPollen.getVelocity());
         telemetry.addData("Outtake power", power);
